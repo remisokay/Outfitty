@@ -7,7 +7,7 @@ public class BaseEntity : BaseEntity<Guid>, IDomainId
     
 }
 
-public abstract class BaseEntity<TKey> : IDomainId<TKey>
+public abstract class BaseEntity<TKey> : IDomainId<TKey>, IDomainMeta
     where TKey : IEquatable<TKey>
 {
     public TKey Id { get; set; } = default!;

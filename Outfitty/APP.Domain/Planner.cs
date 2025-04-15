@@ -5,7 +5,7 @@ namespace Domain;
 public class Planner : BaseEntity
 {
     public DateTime Day { get; set; } = default!;
-    [MaxLength(128)]
+    [MaxLength(254)]
     public string? Comment { get; set; }
     
     
