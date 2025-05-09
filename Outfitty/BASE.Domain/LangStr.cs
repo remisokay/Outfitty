@@ -1,20 +1,23 @@
 namespace BASE.Domain;
 
-public class Language : Dictionary<string, string>
+public class LangStr : Dictionary<string, string>
 {
     private const string DefaultCulture = "en";
-
+    
+    // dictionary access override
     public new string this[string key]
     {
         get => base[key];
         set => base[key] = value;
     }
+    
+    public LangStr() {}
 
-    public Language(string value) : this(value, Thread.CurrentThread.CurrentUICulture.Name)
+    public LangStr(string value) : this(value, Thread.CurrentThread.CurrentUICulture.Name)
     {
     }
 
-    public Language(string value, string culture)
+    public LangStr(string value, string culture)
     {
         if (culture.Length < 1) throw new ApplicationException("Language is required!");
         
@@ -25,7 +28,6 @@ public class Language : Dictionary<string, string>
         {
             this[DefaultCulture] = value;
         }
-        
     }
 
     public string? Translate(string? culture = null)
@@ -56,10 +58,10 @@ public class Language : Dictionary<string, string>
     
     // string xxx = new Language("foo","et-EE"); xxx == "foo";
     // Lets you use a Language anywhere a string is expected
-    public static implicit operator string(Language? langStr) => langStr?.ToString() ?? "null";
+    public static implicit operator string(LangStr? langStr) => langStr?.ToString() ?? "null";
 
     // Language xxx = "foobar";
     // Lets you create a LangStr by just assigning a string
-    public static implicit operator Language(string value) => new Language(value);
+    public static implicit operator LangStr(string value) => new LangStr(value);
     
 }

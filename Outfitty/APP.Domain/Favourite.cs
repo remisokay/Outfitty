@@ -1,12 +1,14 @@
+using BASE.Domain;
+using Domain.identity;
+
 namespace Domain;
 
 public class Favourite : BaseEntity
 {
-    public string? Comment { get; set; }
-    
     //FK
     public Guid UserId { get; set; }
-    public User? User { get; set; }
+    public virtual AppUser? User { get; set; }
     
-    public ICollection<Outfit>? Outfits { get; set; } = default!;
+    public Guid OutfitId { get; set; }
+    public virtual Outfit? Outfit { get; set; }
 }
