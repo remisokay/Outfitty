@@ -1,11 +1,12 @@
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Intrinsics.Arm;
+using BASE.Contracts;
 
-namespace Domain;
+namespace APP.DAL.DTO;
 
-public class Wardrobe : BaseEntity
+public class Wardrobe : IDomainId
 {
-    [MaxLength(128)]
-    public string Name { get; set; } = default!; // Holiday wardrobe
-    [MaxLength(254)]
-    public string? Description { get; set; }
+    public Guid Id { get; set; }
+    [MaxLength(128, ErrorMessageResourceType = typeof(BASE.Resources.Common))]
+    public string Name { get; set; } = default!;
 }

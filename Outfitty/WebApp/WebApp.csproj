@@ -23,6 +23,8 @@
     <ItemGroup>
       <ProjectReference Include="..\APP.DAL.EF\APP.DAL.EF.csproj" />
       <ProjectReference Include="..\APP.DTO\APP.DTO.csproj" />
+      <ProjectReference Include="..\APP.Resources\APP.Resources.csproj" />
+      <ProjectReference Include="..\BASE.Resources\BASE.Resources.csproj" />
     </ItemGroup>
 
 </Project>

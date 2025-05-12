@@ -1,5 +1,6 @@
-using APP.DAL.EF;
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Data;
 using Npgsql;
@@ -34,7 +35,35 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+// add culture switching support
 
+var supportedCultures = builder.Configuration
+    .GetSection("SupportedCultures")
+    .GetChildren()
+    .Select(x => new CultureInfo(x.Value!))
+    .ToArray();
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    // datetime and currency support
+    options.SupportedCultures = supportedCultures;
+    // UI translated strings
+    options.SupportedUICultures = supportedCultures;
+    // if nothing is found, use this
+    options.DefaultRequestCulture =
+        new RequestCulture(
+            builder.Configuration["DefaultCulture"]!,
+            builder.Configuration["DefaultCulture"]!);
+    options.SetDefaultCulture(builder.Configuration["DefaultCulture"]!);
+
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+    {
+        // Order is important, it's in which order they will be evaluated
+        // add support for ?culture=ru-RU
+        new QueryStringRequestCultureProvider(),
+        new CookieRequestCultureProvider(),
+    };
+});
 
 
 
