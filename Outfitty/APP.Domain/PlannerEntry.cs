@@ -12,6 +12,7 @@ public class PlannerEntry : BaseEntity
     [MaxLength(500)]
     public string? Comment { get; set; }
     
+    public TimeSpan? Time { get; set; } // allows multiple entries on the same day
     
     //FK
     public Guid UserId { get; set; }
@@ -19,7 +20,5 @@ public class PlannerEntry : BaseEntity
     
     public Guid OutfitId { get; set; }
     public virtual Outfit? Outfit { get; set; }
-    
-    public TimeSpan? Time { get; set; } // allows multiple entries on the same day
     
 }
