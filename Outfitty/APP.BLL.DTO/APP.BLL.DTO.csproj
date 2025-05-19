@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\APP.Domain\APP.Domain.csproj" />
+      <ProjectReference Include="..\BASE.Resources\BASE.Resources.csproj" />
+    </ItemGroup>
+
+</Project>
