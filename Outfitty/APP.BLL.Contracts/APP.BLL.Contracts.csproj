@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\APP.BLL.DTO\APP.BLL.DTO.csproj" />
+      <ProjectReference Include="..\BASE.BLL.Contracts\BASE.BLL.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>
