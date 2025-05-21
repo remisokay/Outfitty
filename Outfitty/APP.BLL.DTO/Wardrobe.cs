@@ -26,7 +26,11 @@ public class Wardrobe : IDomainId
     public ICollection<ClothingItem>? ClothingItems { get; set; }
     
     // BLL specific functions
-    public int ItemCount => ClothingItems?.Count ?? 0;
-    
+    private int _itemCount;
+    public int ItemCount 
+    {
+        get => ClothingItems?.Count ?? _itemCount; 
+        set => _itemCount = value;
+    }
     
 }
