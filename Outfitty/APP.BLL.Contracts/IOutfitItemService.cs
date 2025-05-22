@@ -3,7 +3,7 @@ using Domain.Enums;
 
 namespace APP.BLL.Contracts;
 
-public interface IOutfitItemService : IBaseService<DTO.ClothingItem>
+public interface IOutfitItemService : IBaseService<DTO.OutfitItem>
 {
     Task<DTO.OutfitItem> AddItemToOutfitAsync(Guid outfitId, Guid clothingItemId, int displayOrder);
     Task RemoveItemFromOutfitAsync(Guid outfitId, Guid clothingItemId);
