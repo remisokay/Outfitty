@@ -17,5 +17,6 @@ public interface IClothingItemService : IBaseService<DTO.ClothingItem>
         ClothingType? type = null, 
         ClothingStyle? style = null, 
         ClothingSeason? season = null, 
-        ClothingColor? color = null);
+        ClothingColor? color = null
+        );
 }
