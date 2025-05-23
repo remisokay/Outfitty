@@ -1,4 +1,4 @@
-using APP.DTO.Identity;
+using APP.DTO.v1.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApp.ApiControllers.Identity;
@@ -11,17 +11,4 @@ public class AccountController : ControllerBase
         
     }
     
-    
-    // [HttpPost]
-    // public async Task<ActionResult<JWTResponse>> Login(
-    //     []
-    //     LoginInfo loginInfo,
-    //     []
-    //     int jwtExpiresInSeconds,
-    //     []
-    //     int refreshTokenExpiresInSeconds
-    // )
-    // {
-    //     if () {}
-    // }
 }

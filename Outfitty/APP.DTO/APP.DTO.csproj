@@ -10,4 +10,9 @@
       <PackageReference Include="SixLabors.ImageSharp" Version="3.1.8" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\APP.BLL.DTO\APP.BLL.DTO.csproj" />
+      <ProjectReference Include="..\BASE.Contracts\BASE.Contracts.csproj" />
+    </ItemGroup>
+
 </Project>

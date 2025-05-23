@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace APP.DTO.Identity;
+namespace APP.DTO.v1.Identity;
 
 public class LoginInfo
 {
