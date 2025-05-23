@@ -12,6 +12,8 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Asp.Versioning.Abstractions" Version="8.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="9.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="9.0.0"/>
@@ -25,6 +27,7 @@
       <ProjectReference Include="..\APP.DAL.EF\APP.DAL.EF.csproj" />
       <ProjectReference Include="..\APP.DTO\APP.DTO.csproj" />
       <ProjectReference Include="..\APP.Resources\APP.Resources.csproj" />
+      <ProjectReference Include="..\BASE.Helpers\BASE.Helpers.csproj" />
       <ProjectReference Include="..\BASE.Resources\BASE.Resources.csproj" />
     </ItemGroup>
 
