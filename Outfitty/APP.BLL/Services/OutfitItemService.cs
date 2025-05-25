@@ -131,7 +131,7 @@ public class OutfitItemService : BaseService<OutfitItem, APP.DAL.DTO.OutfitItem,
         return Mapper.Map(updatedItem)!;
     }
 
-    private async Task<IEnumerable<OutfitItem>> GetItemsByOutfitAsync(Guid outfitId)
+    public async Task<IEnumerable<OutfitItem>> GetItemsByOutfitAsync(Guid outfitId)
     {
         var dalOutfit = await _uow.OutfitRepository.FindAsync(outfitId);
         if (dalOutfit == null)

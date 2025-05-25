@@ -1,6 +1,6 @@
 namespace BASE.Contracts;
 
-public interface IUserNameResolver
+public interface IUsernameResolver
 {
     // tracking who makes changes to entities
     string CurrentUserName { get; }

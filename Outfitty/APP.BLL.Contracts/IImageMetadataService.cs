@@ -8,6 +8,7 @@ public interface IImageMetadataService : IBaseService<DTO.ImageMetadata>
     Task<DTO.ImageMetadata> UploadImageAsync(Stream imageStream, string fileName, string contentType);
     Task<Stream?> GetImageDataAsync(Guid imageId);
     Task<string?> GetPublicUrlAsync(Guid imageId);
+    Task<bool> DeleteImageAsync(Guid imageId, Guid userId);
     
     // User-specific operations
     Task<IEnumerable<DTO.ImageMetadata>> GetUserImagesAsync(Guid userId);
@@ -17,4 +18,5 @@ public interface IImageMetadataService : IBaseService<DTO.ImageMetadata>
     // Clothing-specific operations
     Task<DTO.ImageMetadata?> GetClothingItemImageAsync(Guid clothingItemId);
     Task<IEnumerable<DTO.ImageMetadata>> GetImagesForWardrobeAsync(Guid wardrobeId);
+    Task<DTO.ImageMetadata> AssignImageToClothingItemAsync(Guid imageId, Guid clothingItemId, Guid userId);
 }

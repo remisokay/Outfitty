@@ -21,13 +21,13 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
     
     public DbSet<AppRefreshToken> RefreshTokens { get; set; } = default!;
     
-    private readonly IUserNameResolver _userNameResolver;
+    private readonly IUsernameResolver _usernameResolver;
     private readonly ILogger<AppDbContext> _logger;
 
-    public AppDbContext(DbContextOptions<AppDbContext> options, IUserNameResolver userNameResolver,
+    public AppDbContext(DbContextOptions<AppDbContext> options, IUsernameResolver usernameResolver,
         ILogger<AppDbContext> logger) : base(options)
     {
-        _userNameResolver = userNameResolver;
+        _usernameResolver = usernameResolver;
         _logger = logger;
     }
 
@@ -178,13 +178,13 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
                 {
                     case EntityState.Added:
                         (entry.Entity as IDomainMeta)!.CreatedAt = DateTime.UtcNow;
-                        (entry.Entity as IDomainMeta)!.ChangedBy = _userNameResolver.CurrentUserName;
+                        (entry.Entity as IDomainMeta)!.ChangedBy = _usernameResolver.CurrentUserName;
                         break;
                     case EntityState.Modified:
                         entry.Property("ChangedAt").IsModified = true;
                         entry.Property("ChangedBy").IsModified = true;
                         (entry.Entity as IDomainMeta)!.CreatedAt = DateTime.UtcNow;
-                        (entry.Entity as IDomainMeta)!.ChangedBy = _userNameResolver.CurrentUserName;
+                        (entry.Entity as IDomainMeta)!.ChangedBy = _usernameResolver.CurrentUserName;
                         
                         // Prevent overwriting CreatedBy/CreatedAt on update
                         entry.Property("CreatedAt").IsModified = false;

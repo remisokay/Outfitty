@@ -7,6 +7,8 @@ public interface IOutfitItemService : IBaseService<DTO.OutfitItem>
 {
     Task<DTO.OutfitItem> AddItemToOutfitAsync(Guid outfitId, Guid clothingItemId, int displayOrder);
     Task RemoveItemFromOutfitAsync(Guid outfitId, Guid clothingItemId);
+
+    Task<IEnumerable<DTO.OutfitItem>> GetItemsByOutfitAsync(Guid outfitId);
     
     // Reordering items within an outfit
     Task<IEnumerable<DTO.OutfitItem>> ReorderItemsAsync(Guid outfitId, IEnumerable<KeyValuePair<Guid, int>> itemOrderPairs);

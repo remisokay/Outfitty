@@ -9,6 +9,8 @@ public interface IWardrobeService : IBaseService<DTO.Wardrobe>
     Task<DTO.Wardrobe?> GetWardrobeWithItemsAsync(Guid wardrobeId, Guid userId);
     Task<DTO.ClothingItem> AddClothingItemToWardrobeAsync(Guid wardrobeId, DTO.ClothingItem clothingItem);
     Task RemoveClothingItemFromWardrobeAsync(Guid wardrobeId, Guid clothingItemId);
+
+    Task<Dictionary<ClothingType, int>> GetWardrobeStatisticsAsync(Guid wardrobeId);
     
     // Filtering
     Task<IEnumerable<DTO.ClothingItem>> GetItemsByTypeAsync(Guid wardrobeId, ClothingType type);
