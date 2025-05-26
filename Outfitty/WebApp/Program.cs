@@ -1,9 +1,14 @@
 using System.Globalization;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using APP.BLL;
 using APP.BLL.Contracts;
 using APP.DAL.Contracts;
 using APP.DAL.EF;
 using APP.DAL.EF.DataSeeding;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Domain.identity;
 using BASE.Contracts;
 using Microsoft.AspNetCore.Identity;
@@ -11,7 +16,10 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Npgsql;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using WebApp;
 using WebApp.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,11 +27,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-// used for older style [Column(TypeName = "jsonb")] for LangStr
-#pragma warning disable CS0618 // Type or member is obsolete
-NpgsqlConnection.GlobalTypeMapper.EnableDynamicJson();
-#pragma warning restore CS0618 // Type or member is obsolete
 
 Console.WriteLine(builder.Environment.EnvironmentName);
 
@@ -35,8 +38,6 @@ if (builder.Environment.IsProduction())
                 connectionString,
                 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)
             )
-            // disable tracking, allow id based shared entity creation
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution)
     );
 }
 else
@@ -50,23 +51,54 @@ else
             .ConfigureWarnings(w => w.Throw(RelationalEventId.MultipleCollectionIncludeWarning))
             .EnableDetailedErrors()
             .EnableSensitiveDataLogging()
-            // disable tracking, allow id based shared entity creation
-            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTrackingWithIdentityResolution)
     );
 }
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Register UOW and BLL services
 builder.Services.AddScoped<IAppUow, AppUow>();
 builder.Services.AddScoped<IAppBll, AppBll>();
 
 // Configure Identity with your custom user and role classes
+// builder.Services.AddIdentity<AppUser, AppRole>(o =>
+//         o.SignIn.RequireConfirmedAccount = false)
+//     // .AddDefaultUI()
+//     .AddEntityFrameworkStores<AppDbContext>()
+//     .AddDefaultTokenProviders();
+
 builder.Services.AddIdentity<AppUser, AppRole>(o =>
-        o.SignIn.RequireConfirmedAccount = false)
-    .AddDefaultUI()
+    {
+        o.SignIn.RequireConfirmedAccount = false;
+        o.Password.RequireDigit = false;
+        o.Password.RequiredLength = 6;
+        o.Password.RequireNonAlphanumeric = false;
+        o.Password.RequireUppercase = false;
+        o.Password.RequireLowercase = false;
+    })
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
+
+// remove default claim mapping
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+builder.Services
+    .AddAuthentication()
+    .AddCookie(options => { options.SlidingExpiration = true; })
+    .AddJwtBearer(options =>
+        {
+            options.RequireHttpsMetadata = false;
+            //options.SaveToken = false;
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                RoleClaimType = ClaimTypes.Role,
+                ValidIssuer = builder.Configuration["JWTSecurity:Issuer"],
+                ValidAudience = builder.Configuration["JWTSecurity:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(builder.Configuration["JWTSecurity:Key"]!)),
+                ClockSkew = TimeSpan.Zero
+            };
+        }
+    );
+
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddHttpContextAccessor();
@@ -101,6 +133,40 @@ builder.Services.Configure<RequestLocalizationOptions>(options =>
     };
 });
 
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsAllowAll", policy =>
+    {
+        policy.AllowAnyHeader();
+        policy.AllowAnyMethod();
+        policy.AllowAnyOrigin();
+        policy.SetIsOriginAllowed((host) => true);
+    });
+});
+
+var apiVersioningBuilder = builder.Services.AddApiVersioning(options =>
+{
+    options.ReportApiVersions = true;
+    // in case of no explicit version
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+});
+
+apiVersioningBuilder.AddApiExplorer(options =>
+{
+    // add the versioned api explorer, which also adds IApiVersionDescriptionProvider service
+    // note: the specified format code will format the version as "'v'major[.minor][-status]"
+    options.GroupNameFormat = "'v'VVV";
+
+    // note: this option is only necessary when versioning by url segment. the SubstitutionFormat
+    // can also be used to control the format of the API version in route templates
+    options.SubstituteApiVersionInUrl = true;
+});
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+builder.Services.AddSwaggerGen();
+
+// ======================================================================== BUILD
 var app = builder.Build();
 
 // Migrate db, seed initial data...
@@ -114,7 +180,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -123,19 +188,43 @@ app.UseRequestLocalization(options: app.Services.GetService<IOptions<RequestLoca
 
 app.UseRouting();
 
+app.UseCors("CorsAllowAll");
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+    {
+        var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+        foreach (var description in provider.ApiVersionDescriptions)
+        {
+            options.SwaggerEndpoint(
+                $"/swagger/{description.GroupName}/swagger.json",
+                description.GroupName.ToUpperInvariant()
+            );
+        }
+        // serve from root
+        // options.RoutePrefix = string.Empty;
+    }
+);
+
 app.UseAuthorization();
 
 app.MapStaticAssets();
+
+app.MapControllerRoute(
+        name: "areas",
+        pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}")
+    .WithStaticAssets();
 
 app.MapControllerRoute(
         name: "default",
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-app.MapRazorPages()
-    .WithStaticAssets();
+// app.MapRazorPages()
+//     .WithStaticAssets();
 
 app.Run();
+return;
 
 // ======================================================================================================
 static void SetupAppData(IApplicationBuilder app, IWebHostEnvironment env, IConfiguration configuration)
@@ -143,7 +232,7 @@ static void SetupAppData(IApplicationBuilder app, IWebHostEnvironment env, IConf
     using var serviceScope = app.ApplicationServices
         .GetRequiredService<IServiceScopeFactory>()
         .CreateScope();
-    var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+    var logger = serviceScope.ServiceProvider.GetRequiredService<ILogger<IApplicationBuilder>>();
 
     using var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
 
@@ -184,7 +273,7 @@ static void SetupAppData(IApplicationBuilder app, IWebHostEnvironment env, IConf
     }
 }
 
-static void WaitDbConnection(AppDbContext ctx, ILogger<Program> logger)
+static void WaitDbConnection(AppDbContext ctx, ILogger<IApplicationBuilder> logger)
 {
     while (true)
     {

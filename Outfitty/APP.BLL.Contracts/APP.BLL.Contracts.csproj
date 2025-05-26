@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\APP.BLL.DTO\APP.BLL.DTO.csproj" />
+      <ProjectReference Include="..\APP.DTO\APP.DTO.csproj" />
       <ProjectReference Include="..\BASE.BLL.Contracts\BASE.BLL.Contracts.csproj" />
     </ItemGroup>
 
