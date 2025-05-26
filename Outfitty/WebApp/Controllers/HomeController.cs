@@ -9,23 +9,15 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger) // sinna tuleb kliendi käest päring
+    public HomeController(ILogger<HomeController> logger)
     {
         _logger = logger;
     }
 
     public IActionResult Index()
     {
-        // model - anna datat (> - <)/
-        // data tuleb nii - View(data)
         return View();
     }
-    
-    // [HttpPost]  EXAMPLE USAGE
-    // public IActionResult Index(int id)
-    // {
-    //     return View();
-    // }
 
     public IActionResult Privacy()
     {
