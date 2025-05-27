@@ -7,6 +7,7 @@ public interface IOutfitService : IBaseService<DTO.Outfit>
 {
     Task<IEnumerable<DTO.Outfit>> GetUserOutfitsAsync(Guid userId);
     Task<DTO.Outfit?> GetOutfitWithItemsAsync(Guid outfitId, Guid userId);
+    Task<DTO.Outfit> AssignImageToOutfitAsync(Guid outfitId, Guid imageId);
     
     Task<DTO.Outfit> AddClothingItemToOutfitAsync(Guid outfitId, Guid clothingItemId, int displayOrder);
     Task RemoveClothingItemFromOutfitAsync(Guid outfitId, Guid outfitItemId);

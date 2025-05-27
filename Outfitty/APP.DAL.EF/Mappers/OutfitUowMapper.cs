@@ -23,6 +23,20 @@ public class OutfitUowMapper : IMapper<Outfit, Domain.Outfit>
                 Id = entity.User.Id,
                 Username = entity.User.Username,
             },
+            ImageMetadataId = entity.ImageMetadataId,
+            ImageMetadata = entity.ImageMetadata == null ? null : new ImageMetadata()
+            {
+                Id = entity.ImageMetadata.Id,
+                OriginalFileName = entity.ImageMetadata.OriginalFileName,
+                ContentType = entity.ImageMetadata.ContentType,
+                FileSize = entity.ImageMetadata.FileSize,
+                Width = entity.ImageMetadata.Width,
+                Height = entity.ImageMetadata.Height,
+                StoragePath = entity.ImageMetadata.StoragePath,
+                PublicUrl = entity.ImageMetadata.PublicUrl,
+                ClothingItemId = entity.ImageMetadata.ClothingItemId,
+                UserId = entity.ImageMetadata.UserId
+            },
             OutfitItems = entity.OutfitItems?.Select(oi => new OutfitItem()
             {
                 Id = oi.Id,
@@ -81,6 +95,20 @@ public class OutfitUowMapper : IMapper<Outfit, Domain.Outfit>
             {
                 Id = entity.User.Id,
                 Username = entity.User.Username
+            },
+            ImageMetadataId = entity.ImageMetadataId,
+            ImageMetadata = entity.ImageMetadata == null ? null : new Domain.ImageMetadata()
+            {
+                Id = entity.ImageMetadata.Id,
+                OriginalFileName = entity.ImageMetadata.OriginalFileName,
+                ContentType = entity.ImageMetadata.ContentType,
+                FileSize = entity.ImageMetadata.FileSize,
+                Width = entity.ImageMetadata.Width,
+                Height = entity.ImageMetadata.Height,
+                StoragePath = entity.ImageMetadata.StoragePath,
+                PublicUrl = entity.ImageMetadata.PublicUrl,
+                ClothingItemId = entity.ImageMetadata.ClothingItemId,
+                UserId = entity.ImageMetadata.UserId
             },
             OutfitItems = entity.OutfitItems?.Select(oi => new Domain.OutfitItem()
             {

@@ -18,11 +18,23 @@ public class OutfitBllMapper : IMapper<Outfit, APP.DAL.DTO.Outfit>
             Season = entity.Season,
             Style = entity.Style,
             UserId = entity.UserId,
-            
             User = entity.User == null ? null : new AppUser
             {
                 Id = entity.User.Id,
                 Username = entity.User.Username
+            },
+            
+            ImageMetadataId = entity.ImageMetadataId,
+            ImageMetadata = entity.ImageMetadata == null ? null : new ImageMetadata
+            {
+                Id = entity.ImageMetadata.Id,
+                OriginalFileName = entity.ImageMetadata.OriginalFileName,
+                ContentType = entity.ImageMetadata.ContentType,
+                FileSize = entity.ImageMetadata.FileSize,
+                Width = entity.ImageMetadata.Width,
+                Height = entity.ImageMetadata.Height,
+                StoragePath = entity.ImageMetadata.StoragePath,
+                PublicUrl = entity.ImageMetadata.PublicUrl
             },
             
             OutfitItems = entity.OutfitItems?.Select(oi => new OutfitItem
@@ -78,7 +90,8 @@ public class OutfitBllMapper : IMapper<Outfit, APP.DAL.DTO.Outfit>
             Description = entity.Description,
             Season = entity.Season,
             Style = entity.Style,
-            UserId = entity.UserId
+            UserId = entity.UserId,
+            ImageMetadataId = entity.ImageMetadataId
         };
 
         return result;

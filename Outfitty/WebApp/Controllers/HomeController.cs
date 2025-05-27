@@ -18,6 +18,16 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    public IActionResult MyWardrobe()
+    {
+        return View("~/Views/Wardrobe/MyWardrobe.cshtml");
+    }
+    
+    public IActionResult MyPlanner()
+    {
+        return View("~/Views/Planner/MyPlanner.cshtml");
+    }
 
     public IActionResult Privacy()
     {

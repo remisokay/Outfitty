@@ -57,6 +57,35 @@ public class OutfitService : BaseService<Outfit, APP.DAL.DTO.Outfit, IOutfitRepo
         return bllOutfit;
     }
 
+    public async Task<Outfit> AssignImageToOutfitAsync(Guid outfitId, Guid imageId)
+    {
+        var dalOutfit = await ServiceRepository.FindAsync(outfitId);
+        if (dalOutfit == null)
+            throw new ArgumentException($"Clothing item not found");
+        
+        var userId = dalOutfit?.UserId ?? Guid.Empty;
+        if (userId == Guid.Empty)
+            throw new InvalidOperationException($"User ID not determined for clothing item");
+        
+        var image = await _uow.ImageMetadataRepository.FindAsync(imageId, userId);
+        if (image == null)
+            throw new ArgumentException("Image not found in clothing item services");
+        if (image.OutfitId.HasValue && image.OutfitId != outfitId)
+            throw new InvalidOperationException("Image is already assigned to another clothing item");
+        
+        // assign image to clothing item
+        image.OutfitId = outfitId;
+        dalOutfit!.ImageMetadataId = imageId;
+        // update
+        await _uow.ImageMetadataRepository.UpdateAsync(image);
+        await ServiceRepository.UpdateAsync(dalOutfit);
+        await _uow.SaveChangesAsync();
+        // return
+        var updated = await ServiceRepository.FindAsync(outfitId, userId);
+        var bllItem = Mapper.Map(updated)!;
+        return bllItem;
+    }
+
     public async Task<Outfit> AddClothingItemToOutfitAsync(Guid outfitId, Guid clothingItemId, int displayOrder)
     {
         var dalOutfit = await ServiceRepository.FindAsync(outfitId);

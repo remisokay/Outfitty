@@ -186,6 +186,30 @@ public class OutfitController : ControllerBase
     }
     
     
+    // Assign image to clothing item
+    [Produces("application/json")]
+    [HttpPut("{id:guid}/image/{imageId:guid}")]
+    public async Task<ActionResult<ClothingItem>> AssignImageToOutfit(Guid id, Guid imageId)
+    {
+            
+        try
+        {
+            var updatedItem = await _bll.Outfits.AssignImageToOutfitAsync(id, imageId);
+            await _bll.SaveChangesAsync();
+                
+            return Ok(_mapper.Map(updatedItem)!);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new Message(ex.Message));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new Message(ex.Message));
+        }
+    }
+    
+    
     /*
      * Some functions to add in the future:
      *  outfit completeness validation,

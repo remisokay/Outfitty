@@ -21,6 +21,7 @@ public class ImageMetadataUowMapper : IMapper<ImageMetadata, Domain.ImageMetadat
             StoragePath = entity.StoragePath,
             PublicUrl = entity.PublicUrl,
             ClothingItemId = entity.ClothingItemId,
+            OutfitId = entity.OutfitId,
             UserId = entity.UserId,
             ClothingItem = entity.ClothingItem == null ? null : new ClothingItem()
             {
@@ -32,6 +33,15 @@ public class ImageMetadataUowMapper : IMapper<ImageMetadata, Domain.ImageMetadat
                 PrimaryColor = entity.ClothingItem.PrimaryColor,
                 SecondaryColor = entity.ClothingItem.SecondaryColor,
                 WardrobeId = entity.ClothingItem.WardrobeId
+            },
+            Outfit = entity.Outfit == null ? null : new Outfit()
+            {
+                Id = entity.Outfit.Id,
+                Name = entity.Outfit.Name,
+                Description = entity.Outfit.Description,
+                Season = entity.Outfit.Season,
+                Style = entity.Outfit.Style,
+                UserId = entity.Outfit.UserId
             },
             User = entity.User == null ? null : new AppUser()
             {
@@ -58,6 +68,7 @@ public class ImageMetadataUowMapper : IMapper<ImageMetadata, Domain.ImageMetadat
             StoragePath = entity.StoragePath,
             PublicUrl = entity.PublicUrl,
             ClothingItemId = entity.ClothingItemId,
+            OutfitId = entity.OutfitId,
             UserId = entity.UserId,
             ClothingItem = entity.ClothingItem == null ? null : new Domain.ClothingItem()
             {
@@ -69,6 +80,15 @@ public class ImageMetadataUowMapper : IMapper<ImageMetadata, Domain.ImageMetadat
                 PrimaryColor = entity.ClothingItem.PrimaryColor,
                 SecondaryColor = entity.ClothingItem.SecondaryColor,
                 WardrobeId = entity.ClothingItem.WardrobeId
+            },
+            Outfit = entity.Outfit == null ? null : new Domain.Outfit()
+            {
+                Id = entity.Outfit.Id,
+                Name = entity.Outfit.Name,
+                Description = entity.Outfit.Description,
+                Season = entity.Outfit.Season,
+                Style = entity.Outfit.Style,
+                UserId = entity.Outfit.UserId
             },
             User = entity.User == null ? null : new AppUser()
             {

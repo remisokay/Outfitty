@@ -29,6 +29,12 @@ public class Outfit : IDomainId
 
     // [Display(Name = nameof(User), ResourceType = typeof(APP.Resources.Domain.Outfit))]
     public AppUser? User { get; set; }
+    
+    // [Display(Name = nameof(ImageMetadataId), ResourceType = typeof(APP.Resources.Domain.ClothingItem))]
+    public Guid ImageMetadataId { get; set; }
+
+    // [Display(Name = nameof(ImageMetadata), ResourceType = typeof(APP.Resources.Domain.ClothingItem))]
+    public ImageMetadata? ImageMetadata { get; set; }
 
     public ICollection<OutfitItem>? OutfitItems { get; set; }
     public ICollection<PlannerEntry>? PlannerEntries { get; set; }

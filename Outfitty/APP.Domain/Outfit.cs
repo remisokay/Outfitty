@@ -19,9 +19,14 @@ public class Outfit : BaseEntity
     public Guid UserId { get; set; }
     public virtual AppUser? User { get; set; }
     
+    public Guid ImageMetadataId { get; set; }
+    public virtual ImageMetadata? ImageMetadata { get; set; }
+    
     public virtual ICollection<OutfitItem>? OutfitItems { get; set; }
     public virtual ICollection<PlannerEntry>? PlannerEntries { get; set; }
     public virtual ICollection<Favourite>? Favourites { get; set; }
+    
+    
     
     
     

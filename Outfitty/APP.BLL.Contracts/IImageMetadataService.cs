@@ -19,4 +19,9 @@ public interface IImageMetadataService : IBaseService<DTO.ImageMetadata>
     Task<DTO.ImageMetadata?> GetClothingItemImageAsync(Guid clothingItemId);
     Task<IEnumerable<DTO.ImageMetadata>> GetImagesForWardrobeAsync(Guid wardrobeId);
     Task<DTO.ImageMetadata> AssignImageToClothingItemAsync(Guid imageId, Guid clothingItemId, Guid userId);
+    
+    // Outfit-specific operations
+    Task<DTO.ImageMetadata?> GetOutfitImageAsync(Guid outfitId);
+    Task<DTO.ImageMetadata> AssignImageToOutfitAsync(Guid imageId, Guid outfitId, Guid userId);
+    
 }

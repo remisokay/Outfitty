@@ -17,6 +17,9 @@ public class ImageMetadata : BaseEntity
     public Guid? ClothingItemId { get; set; }
     public virtual ClothingItem? ClothingItem { get; set; }
     
+    public Guid? OutfitId { get; set; }
+    public virtual Outfit? Outfit { get; set; }
+    
     public Guid? UserId { get; set; }
     public virtual AppUser? User { get; set; }
 }

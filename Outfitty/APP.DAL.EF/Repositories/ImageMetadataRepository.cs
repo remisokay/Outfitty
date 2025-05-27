@@ -34,6 +34,14 @@ public class ImageMetadataRepository : BaseRepository<ImageMetadata, Domain.Imag
             .Where(i => i.ClothingItemId == clothingItemId && i.UserId == userId)
             .FirstOrDefaultAsync());
     }
+    
+    public async Task<ImageMetadata?> GetImageByOutfitAsync(Guid outfitId, Guid userId)
+    {
+        return Mapper.Map(await RepositoryDbSet
+            .Include(i => i.Outfit)
+            .Where(i => i.OutfitId == outfitId && i.UserId == userId)
+            .FirstOrDefaultAsync());
+    }
 
     public async Task<ImageMetadata?> GetImageByUserProfileAsync(Guid userId)
     {

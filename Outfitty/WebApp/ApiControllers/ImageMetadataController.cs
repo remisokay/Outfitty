@@ -119,6 +119,18 @@ public class ImageMetadataController : ControllerBase
         return _mapper.Map(image)!;
     }
     
+    // Get image for a specific outfit
+    [Produces("application/json")]
+    [HttpGet("outfit/{outfitId:guid}")]
+    public async Task<ActionResult<ImageMetadata>> GetOutfitImage(Guid outfitId)
+    {
+        var image = await _bll.Images.GetOutfitImageAsync(outfitId);
+
+        if (image == null) return NotFound(new Message("Image not found for outfit"));
+
+        return _mapper.Map(image)!;
+    }
+    
     
     // Get all images for clothing items
     [Produces("application/json")]
@@ -137,6 +149,7 @@ public class ImageMetadataController : ControllerBase
     public async Task<ActionResult<ImageMetadata>> UploadImage(
         IFormFile file, 
         [FromForm] Guid? clothingItemId = null,
+        [FromForm] Guid? outfitId = null,
         [FromForm] bool isProfileImage = false)
     {
         if (file.Length == 0) 
@@ -167,6 +180,16 @@ public class ImageMetadataController : ControllerBase
                     return BadRequest(new Message("Clothing item not found or does not belong to you"));
                 
                 uploadedImage.ClothingItemId = clothingItemId.Value;
+            }
+            
+            // associate with outfit if specified
+            if (outfitId.HasValue)
+            {
+                var outfit = await _bll.Outfits.FindAsync(outfitId.Value, userId);
+                if (outfit == null)
+                    return BadRequest(new Message("Outfit not found or does not belong to you"));
+                
+                uploadedImage.OutfitId = outfitId.Value;
             }
 
             // Set as profile image if specified
@@ -249,6 +272,31 @@ public class ImageMetadataController : ControllerBase
         try
         {
             var updatedImage = await _bll.Images.AssignImageToClothingItemAsync(id, clothingItemId, userId);
+            await _bll.SaveChangesAsync();
+                
+            return Ok(_mapper.Map(updatedImage)!);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new Message(ex.Message));
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Conflict(new Message(ex.Message));
+        }
+    }
+    
+    
+    // Connect image with outfit
+    [Produces("application/json")]
+    [HttpPut("{id}/outfit/{outfitId}")]
+    public async Task<ActionResult<ImageMetadata>> AssignToOutfit(Guid id, Guid outfitId)
+    {
+        var userId = User.GetUserId();
+
+        try
+        {
+            var updatedImage = await _bll.Images.AssignImageToOutfitAsync(id, outfitId, userId);
             await _bll.SaveChangesAsync();
                 
             return Ok(_mapper.Map(updatedImage)!);

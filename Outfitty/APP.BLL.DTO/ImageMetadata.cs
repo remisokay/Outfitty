@@ -34,6 +34,12 @@ public class ImageMetadata : IDomainId
 
     // [Display(Name = nameof(ClothingItem), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
     public ClothingItem? ClothingItem { get; set; }
+    
+    // [Display(Name = nameof(OutfitId), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
+    public Guid? OutfitId { get; set; }
+
+    // [Display(Name = nameof(Outfit), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
+    public Outfit? Outfit { get; set; }
 
     // [Display(Name = nameof(UserId), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
     public Guid? UserId { get; set; }
@@ -43,8 +49,9 @@ public class ImageMetadata : IDomainId
     
     // BLL functions
     public bool IsImage => ContentType.StartsWith("image/");
-    public bool IsProfileImage => UserId.HasValue && !ClothingItemId.HasValue;
+    public bool IsProfileImage => UserId.HasValue && !ClothingItemId.HasValue && !OutfitId.HasValue;
     public bool IsClothingImage => ClothingItemId.HasValue;
+    public bool IsOutfitImage => OutfitId.HasValue;
     
     public string FileExtension => 
         OriginalFileName.Contains('.') 

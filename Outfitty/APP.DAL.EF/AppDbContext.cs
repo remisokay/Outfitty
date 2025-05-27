@@ -106,6 +106,12 @@ public class AppDbContext : IdentityDbContext<AppUser, AppRole, Guid, IdentityUs
             .WithOne(i => i.ClothingItem)
             .HasForeignKey<ImageMetadata>(i => i.ClothingItemId);
         
+        // Outfit has ImageMetadata
+        builder.Entity<Outfit>()
+            .HasOne(c => c.ImageMetadata)
+            .WithOne(i => i.Outfit)
+            .HasForeignKey<ImageMetadata>(i => i.OutfitId);
+        
         // OutfitItem connects Outfit and ClothingItem
         builder.Entity<OutfitItem>()
             .HasOne(oi => oi.Outfit)

@@ -35,6 +35,12 @@ public class ImageMetadata : IDomainId
 
     // [Display(Name = nameof(ClothingItem), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
     public ClothingItem? ClothingItem { get; set; }
+    
+    // [Display(Name = nameof(OutfitId), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
+    public Guid? OutfitId { get; set; }
+
+    // [Display(Name = nameof(Outfit), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
+    public Outfit? Outfit { get; set; }
 
     // [Display(Name = nameof(UserId), ResourceType = typeof(APP.Resources.Domain.ImageMetadata))]
     public Guid? UserId { get; set; }
